@@ -1,22 +1,24 @@
-package APITests;
+package TestsAPI;
 
-import io.restassured.RestAssured;
+import static io.restassured.RestAssured.*;
+import static org.testng.Assert.*;
+
+
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.testng.Assert.*;
-
-public class SpartanTestWithQueryParam {
+public class TestWithQueryParams {
 
     @BeforeClass
     public void setupClass() {
 
-        RestAssured. baseURI="http://54.144.70.64:8000";
+        baseURI="http://54.144.70.64:8000";
 
     }
 
@@ -29,17 +31,17 @@ public class SpartanTestWithQueryParam {
         Then response status code should be 200
         And response content type: application/json
         And "Female" should be in response payload
-        And "Janette" should be in response payload
-
-
-     */
+        And "Janette" should be in response payload*/
 
     @Test
-    public void queryPramTest1(){
-        Response response = RestAssured.given().accept(ContentType.JSON)
+    public void testWithQueryParams() {
+
+        Response response=given().accept(ContentType.JSON)
                 .and().queryParam("gender", "Female")
-                .and().queryParam("nameContains", "J")
+                .and().queryParam("nameContains","J")
                 .when().get("/api/spartans/search");
+
+
 
         assertEquals(response.statusCode(), 200);
 
@@ -52,17 +54,19 @@ public class SpartanTestWithQueryParam {
         assertTrue(response.body().asString().contains("Janette"));
 
         System.out.println(response.getBody().prettyPrint());
-    }
 
+
+    }
     @Test
-    public void testing2(){
+    public void testWithQueryParams2() {
 
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("gender", "Female");
-        paramsMap.put("nameContains", "J");
+        Map<String,Object> mapParam= new HashMap<>();
 
-        Response response = RestAssured.given().accept(ContentType.JSON)
-                .queryParams(paramsMap)
+        mapParam.put("gender","Female");
+        mapParam.put("nameContains","J");
+
+        Response response= given().accept(ContentType.JSON)
+                .and().queryParams(mapParam)
                 .when().get("/api/spartans/search");
 
         assertEquals(response.statusCode(), 200);
@@ -76,8 +80,11 @@ public class SpartanTestWithQueryParam {
         assertTrue(response.body().asString().contains("Janette"));
 
         System.out.println(response.getBody().prettyPrint());
+
+
+
+
+
+
     }
-
-
-
-}
+    }
